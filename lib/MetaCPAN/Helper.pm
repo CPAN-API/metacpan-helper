@@ -35,6 +35,28 @@ sub module2dist {
     return $module->distribution || undef;
 }
 
+sub release2git_repo {
+    my $self = shift;
+    my $_r   = shift;
+
+    my $release = ref($_r) eq 'MetaCPAN::Client::Release'
+        ? $_r
+        : !ref($_r)
+            ? $self->client->release($_r)
+            : croak "invalid release name";
+
+    my $res = $release->resources || return undef;
+    my $rep = $res->{repository}  || return undef;
+    my $url = $rep->{url}         || return undef;
+
+    my $type = $rep->{type};
+
+    $type and $type eq 'git' and return $url;
+    $url =~ /github/         and return $url;
+
+    return undef;
+}
+
 sub dist2releases {
     my $self      = shift;
     my $dist_name = _get_dist_name(shift);
@@ -60,6 +82,18 @@ sub dist2latest_release {
 
     return ( $release->total == 1 ? $release->next : undef );
 }
+
+sub dist2favorite_count {
+    my $self      = shift;
+    my $dist_name = _get_dist_name(shift);
+
+    my $filter = { distribution => $dist_name };
+
+    my $favorite = $self->client->favorite($filter);
+
+    return ( ref $favorite ? $favorite->total : undef );
+}
+
 
 sub _get_dist_name {
     my $val = shift;
@@ -112,6 +146,11 @@ name produced by L<CPAN::DistnameInfo>, then be aware that this method
 returns the name according to C<CPAN::DistnameInfo>.
 This doesn't happen very often (less than 0.5% of CPAN distributions).
 
+=head release2git_repo( $RELEASE_NAME | $RELEASE_OBJ )
+
+Takes the name of a release or a L<MetaCPAN::Client::Release> object,
+and returns the git repo URL string or undef if not found.
+
 =head2 dist2releases( $DIST_NAME | $DIST_OBJ )
 
 Takes the name of a distribution or a L<MetaCPAN::Client::Distribution> object,
@@ -124,6 +163,11 @@ associated with that distribution.
 Takes the name of a distribution or a L<MetaCPAN::Client::Distribution> object,
 and returns the L<MetaCPAN::Client::Release>
 object of the "latest" release of that distribution.
+
+=head2 dist2favorite_count( $DIST_NAME | $DIST_OBJ )
+
+Takes the name of a distribution or a L<MetaCPAN::Client::Distribution> object,
+and returns the favorites count for that distribution.
 
 =head1 SEE ALSO
 
