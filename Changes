@@ -1,6 +1,6 @@
 Revision history for Perl module MetaCPAN::Helper
 
-0.04 *
+0.04 2015-02-27 NEILB
     - Added method release2repo (mickeyn)
     - Added method dist2repo (latest release's repo) (mickeyn)
     - Added method dist2favorite_count (mickeyn)
