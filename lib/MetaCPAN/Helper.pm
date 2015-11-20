@@ -149,12 +149,12 @@ name produced by L<CPAN::DistnameInfo>, then be aware that this method
 returns the name according to C<CPAN::DistnameInfo>.
 This doesn't happen very often (less than 0.5% of CPAN distributions).
 
-=head release2repo( $RELEASE_NAME | $RELEASE_OBJ )
+=head2 release2repo( $RELEASE_NAME | $RELEASE_OBJ )
 
 Takes the name of a release or a L<MetaCPAN::Client::Release> object,
 and returns the repo URL string or undef if not found.
 
-=head dist2repo( $DIST_NAME | $DIST_OBJ )
+=head2 dist2repo( $DIST_NAME | $DIST_OBJ )
 
 Takes the name of a distribution or a L<MetaCPAN::Client::Distribution> object,
 and returns the repo URL string or undef if not found, of its latest release.
